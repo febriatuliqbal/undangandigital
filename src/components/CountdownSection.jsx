@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ornamenJawa from '../assets/MOTIF ORNAMEN JAWA.png';
 
-export default function CountdownSection() {
+export default function CountdownSection({ isAutoScrolling, onToggleAutoScroll }) {
   const targetDate = new Date('2026-12-19T10:00:00+07:00').getTime();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -27,7 +27,7 @@ export default function CountdownSection() {
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  // Link Google Calendar Resepsi (Sabtu, 19 Des 2026 10:00 - 15:00 WIB -> UTC 03:00 - 08:00)
+  // Link Google Calendar Resepsi
   const googleCalendarUrl =
     'https://calendar.google.com/calendar/render?action=TEMPLATE' +
     '&text=' + encodeURIComponent('Resepsi Pernikahan Windi & Iqbal') +
@@ -35,36 +35,9 @@ export default function CountdownSection() {
     '&details=' + encodeURIComponent('Acara Resepsi Pernikahan Ns. Maisafa Windi Ilham, S.Kep & Febriatul Iqbal, S.Kom') +
     '&location=' + encodeURIComponent('Simpang Malako Panarian Kecamatan Gunung Talang');
 
-  // Generate file .ics untuk kalender bawaan HP (Apple Calendar / Samsung / dll)
-  const handleDownloadICS = () => {
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Undangan Windi & Iqbal//ID',
-      'BEGIN:VEVENT',
-      'DTSTART:20261219T030000Z',
-      'DTEND:20261219T080000Z',
-      'SUMMARY:Resepsi Pernikahan Windi & Iqbal',
-      'DESCRIPTION:Acara Resepsi Pernikahan Ns. Maisafa Windi Ilham, S.Kep & Febriatul Iqbal, S.Kom',
-      'LOCATION:Simpang Malako Panarian Kecamatan Gunung Talang',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'Pernikahan-Windi-Iqbal.ics');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <>
-      {/* COUNTDOWN TIMER + ADD TO CALENDAR (TAMPIL LANGSUNG DARI AWAL) */}
+      {/* COUNTDOWN TIMER + AKSI (PLAY SCROLL & SIMPAN CALENDAR) */}
       <section className="relative px-6 text-center space-y-4">
         <h3 className="text-lg font-bold text-[#ffd875] tracking-wide">
           Menuju Hari Bahagia
@@ -89,13 +62,25 @@ export default function CountdownSection() {
           </div>
         </div>
 
-        {/* TOMBOL ADD TO CALENDAR */}
-        <div className="flex flex-wrap items-center justify-center gap-2 pt-1 font-sans">
+        {/* TOMBOL AKSI: PLAY OTOMATIS SCROLL & ADD TO CALENDAR */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1 font-sans relative z-10">
+          <button
+            type="button"
+            onClick={onToggleAutoScroll}
+            className={`inline-flex items-center space-x-1.5 px-4 py-2 rounded-full text-[11px] font-bold tracking-wide shadow-md transition-all active:scale-95 cursor-pointer ${
+              isAutoScrolling
+                ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse'
+                : 'bg-[#f0c243] hover:bg-[#d9ab30] text-[#50060c]'
+            }`}
+          >
+            <span>{isAutoScrolling ? '⏸ Hentikan Scroll' : '▶ Putar Otomatis'}</span>
+          </button>
+
           <a
             href={googleCalendarUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1.5 px-4 py-2 bg-[#f0c243] hover:bg-[#d9ab30] text-[#50060c] rounded-full text-[11px] font-bold tracking-wide shadow-md transition-all active:scale-95"
+            className="inline-flex items-center space-x-1.5 px-4 py-2 bg-[#50060c]/90 hover:bg-[#3a0509] border border-[#f0c243]/50 text-[#ffd875] rounded-full text-[11px] font-bold tracking-wide shadow-md transition-all active:scale-95"
           >
             <span>📅 Simpan ke Calendar</span>
           </a>
@@ -107,9 +92,9 @@ export default function CountdownSection() {
         data-anim="right"
         className="relative px-6 text-center space-y-4 scroll-animate opacity-0 translate-x-8 transition-all duration-700 ease-out"
       >
-         <img
+        <img
           src={ornamenJawa}
-          alt="Ornamen Ar-Rum Right"
+          alt="Ornamen Ar-Rum Left"
           className="absolute -top-50 -left-14 w-35 h-auto opacity-25 brightness-50 rotate-315 animate-float-delayed pointer-events-none z-0"
         />
 

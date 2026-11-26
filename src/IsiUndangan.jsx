@@ -74,7 +74,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
     };
 
     const hideElement = (el) => {
-      el.classList.remove(...getVisibleClasses());
+      el.classList.remove(...getHiddenClasses(el));
       el.classList.add(...getHiddenClasses(el));
     };
 
@@ -230,7 +230,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
             </div>
 
             {/* 2. LAYER KONTEN (MELUNCUR NAIK MENUTUPI HERO) */}
-            <div className="relative z-20 mt- pt-8 pb-24 space-y-12  bg-gradient-to-b from-[#6d070e] via-[#850e18] to-[#6d0912]">
+            <div className="relative z-20 pt-8 pb-24 space-y-12 bg-gradient-to-b from-[#6d070e] via-[#850e18] to-[#6d0912]">
               <img
                 src={ornamenJawa}
                 alt="Ornamen Jawa Tengah Kiri"
@@ -247,7 +247,10 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
                 className="absolute top-[76%] -left-14 w-44 h-auto opacity-25 brightness-75 animate-float pointer-events-none z-0"
               />
 
-              <CountdownSection />
+              <CountdownSection
+                isAutoScrolling={isAutoScrolling}
+                onToggleAutoScroll={() => setIsAutoScrolling(!isAutoScrolling)}
+              />
               <ProfilSection />
               <AcaraLokasiSection />
               <LoveJourneySection />              
@@ -279,7 +282,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
             <img
               src={motifBawah}
               alt="Motif Minang Bawah Sticky"
-              className="w-full h-auto block object-cover animate-slide-horizontal scale-105"
+              className="w-full h-full block object-cover animate-slide-horizontal scale-105"
             />
           </div>
         </div>
