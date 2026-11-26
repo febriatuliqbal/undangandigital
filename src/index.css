@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+html, body {
+  background-color: #3a0509;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Mencegah bounce scroll berlebih di iOS/Android */
+  overscroll-behavior-y: none;
+}
+
+/* Gunakan 100dvh agar tinggi otomatis menyesuaikan sticky/address bar browser HP */
+@supports (height: 100dvh) {
+  .min-h-mobile {
+    min-height: 100dvh;
+  }
+  .h-mobile {
+    height: 100dvh;
+  }
+}
+
+@supports not (height: 100dvh) {
+  .min-h-mobile {
+    min-height: 100vh;
+  }
+  .h-mobile {
+    height: 100vh;
+  }
+}
+
+/* Custom Scrollbar Minimalis & Elegan */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #3a0509;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(240, 194, 67, 0.4);
+  border-radius: 10px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(240, 194, 67, 0.4) #3a0509;
+}
