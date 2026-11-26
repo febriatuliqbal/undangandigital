@@ -1,25 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ornamenJawa from '../assets/MOTIF ORNAMEN JAWA.png';
+// Import foto penutup (sesuaikan nama file dan lokasi gambar di project Anda)
+import photoThankYou from '../assets/photo-thankyou.jpg';
 
-const DUMMY_COMMENTS = [
-  {
-    id: 1,
-    name: 'Hen***',
-    text: 'Selamat ya Windi & Iqbal! Semoga sakinah, mawaddah, warahmah sampai kakek nenek. Yuk tulis doa terbaikmu di sini! ✨',
-    time: 'Baru saja',
-  },
-  {
-    id: 2,
-    name: 'Nad***',
-    text: 'Turut berbahagia untuk kalian berdua! Lancar terus persiapannya sampai hari H, jangan lupa titip doa di atas ya 🤍',
-    time: '15 menit lalu',
-  },
-  {
-    id: 3,
-    name: 'Dim***',
-    text: 'Akhirnya sah juga! Semoga rumah tangganya selalu penuh berkah dan cinta. Silakan tinggalkan ucapan buat Windi & Iqbal 💐',
-    time: '1 jam lalu',
-  },
+// URL Logo Bank & e-Wallet
+const LOGO_BRI = 'https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_BRI.png?utm_source=id.wikipedia.org&utm_campaign=index&utm_content=original';
+const LOGO_DANA = 'https://upload.wikimedia.org/wikipedia/commons/5/52/Dana_logo.png';
+
+// ==========================================
+// DATA POOL & GENERATOR KOMENTAR ACAK
+// ==========================================
+const NAMES_POOL = [
+  'Hendra', 'Nadia', 'Dimas', 'Rizky', 'Anisa', 'Bayu', 'Bintang', 'Citra', 
+  'Dewi', 'Eka', 'Fajar', 'Gita', 'Hafiz', 'Indah', 'Joko', 'Kartika', 
+  'Lestari', 'Maya', 'Nugroho', 'Pratama', 'Putri', 'Rahman', 'Rina', 'Sari', 
+  'Taufik', 'Utami', 'Vina', 'Wahyu', 'Yulia', 'Zainal'
+];
+
+const TIMES_POOL = [
+  'Baru saja', '2 menit lalu', '5 menit lalu', '12 menit lalu', '18 menit lalu',
+  '25 menit lalu', '35 menit lalu', '45 menit lalu', '1 jam lalu', '2 jam lalu',
+  '3 jam lalu', '4 jam lalu', '5 jam lalu', '6 jam lalu', 'Kemarin'
+];
+
+const TEXTS_POOL = [
+  'Selamat ya Windi & Iqbal! Semoga sakinah, mawaddah, warahmah sampai kakek nenek ✨',
+  'Turut berbahagia untuk kalian berdua! Lancar terus persiapannya sampai hari H 🤍',
+  'Akhirnya sah juga! Semoga rumah tangganya selalu penuh berkah dan cinta 💐',
+  'Barakallahu lakuma wa baraka alaikuma wa jamaa bainakuma fii khoir. Selamat Windi & Iqbal! 🎉',
+  'Happy Wedding Windi & Iqbal! Semoga menjadi pasangan yang selalu menginspirasi 🥳',
+  'Selamat menempuh hidup baru sahabatku! Doa terbaik selalu untuk kalian berdua 🤍',
+  'Semoga pernikahan kalian dipenuhi kebahagiaan, kedamaian, dan keberkahan selamanya 🕊️',
+  'Selamat mengarungi bahtera rumah tangga! Semoga selalu kompak dan bahagia selamanya ✨',
+  'Ikut seneng banget ngeliat kalian berdua! Lancar-lancar terus yaa sampai hari H 💕',
+  'Selamat yaa! Semoga kelak dikaruniai keturunan yang saleh & salehah, amin 🤲',
+  'Cinta kalian sungguh menginspirasi. Selamat menempuh lembaran baru Windi & Iqbal! 🥂',
+  'Semoga cinta kalian terus tumbuh setiap harinya. Selamat berbahagia! ❤️'
 ];
 
 function maskName(rawName) {
@@ -29,13 +45,48 @@ function maskName(rawName) {
   return `${prefix}***`;
 }
 
+function shuffleArray(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function generateRandomComments(count = 10) {
+  const shuffledNames = shuffleArray(NAMES_POOL);
+  const shuffledTexts = shuffleArray(TEXTS_POOL);
+  
+  const results = [];
+  for (let i = 0; i < count; i++) {
+    const randomTime = TIMES_POOL[Math.floor(Math.random() * TIMES_POOL.length)];
+    const rawName = shuffledNames[i % shuffledNames.length];
+    const text = shuffledTexts[i % shuffledTexts.length];
+    
+    results.push({
+      id: i + 1,
+      name: maskName(rawName),
+      text: text,
+      time: randomTime,
+    });
+  }
+  return results;
+}
+
+// ==========================================
+// KOMPONEN UTAMA
+// ==========================================
 export default function AmplopUcapanSection({ guestName }) {
   const [copiedAccount, setCopiedAccount] = useState('');
   const [senderName, setSenderName] = useState(
     guestName !== 'Tamu Undangan' ? guestName : ''
   );
   const [ucapanText, setUcapanText] = useState('');
-  const [comments, setComments] = useState(DUMMY_COMMENTS);
+  
+  // Inisialisasi 10 komentar acak tiap kali dibuka
+  const [comments, setComments] = useState(() => generateRandomComments(10));
+  
   const [activeSlide, setActiveSlide] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -138,34 +189,54 @@ export default function AmplopUcapanSection({ guestName }) {
         />
 
         <h3 className="text-lg font-bold text-[#ffd875] font-serif tracking-wide relative z-10">
-          Amplop Digital
+          WEDDING GIFT
         </h3>
         <p className="text-xs text-gray-300 relative z-10">
           Doa Restu Anda merupakan karunia yang sangat berarti bagi kami. Bagi yang ingin memberikan tanda kasih, dapat melalui rekening berikut:
         </p>
 
         <div className="space-y-3 relative z-10">
-          <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-4 rounded-xl text-left shadow-lg relative">
-            <p className="text-xs font-bold text-[#ffd875] uppercase">BANK MANDIRI / BCA</p>
-            <p className="text-base font-bold text-white tracking-widest my-1">1234 5678 9012</p>
+          {/* REKENING BRI */}
+          <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-4 rounded-xl text-left shadow-lg relative flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold text-[#ffd875] uppercase">BANK BRI</span>
+              <img
+                src={LOGO_BRI}
+                alt="Logo BRI"
+                className="h-5 w-auto object-contain brightness-0 invert opacity-90"
+              />
+            </div>
+            <p className="text-base font-bold text-white tracking-widest my-1">
+              5552 0101 5749 538
+            </p>
             <p className="text-xs text-gray-300">a.n. Maisafa Windi Ilham</p>
             <button
-              onClick={() => handleCopy('123456789012', 'Windi')}
+              onClick={() => handleCopy('555201015749538', 'BRI')}
               className="absolute right-3 bottom-3 px-3 py-1 bg-[#f0c243] text-[#50060c] text-[10px] font-bold rounded-md hover:bg-[#d9ab30] cursor-pointer"
             >
-              {copiedAccount === 'Windi' ? 'Copied!' : 'Salin No'}
+              {copiedAccount === 'BRI' ? 'Copied!' : 'Salin No'}
             </button>
           </div>
 
-          <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-4 rounded-xl text-left shadow-lg relative">
-            <p className="text-xs font-bold text-[#ffd875] uppercase">BANK BRI / BCA</p>
-            <p className="text-base font-bold text-white tracking-widest my-1">9876 5432 1098</p>
-            <p className="text-xs text-gray-300">a.n. Febriatul Iqbal</p>
+          {/* REKENING DANA */}
+          <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-4 rounded-xl text-left shadow-lg relative flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold text-[#ffd875] uppercase">DANA</span>
+              <img
+                src={LOGO_DANA}
+                alt="Logo DANA"
+                className="h-5 w-auto object-contain brightness-0 invert opacity-90"
+              />
+            </div>
+            <p className="text-base font-bold text-white tracking-widest my-1">
+              088279556300
+            </p>
+            <p className="text-xs text-gray-300">a.n. Maisafa Windi Ilham</p>
             <button
-              onClick={() => handleCopy('987654321098', 'Iqbal')}
+              onClick={() => handleCopy('088279556300', 'DANA')}
               className="absolute right-3 bottom-3 px-3 py-1 bg-[#f0c243] text-[#50060c] text-[10px] font-bold rounded-md hover:bg-[#d9ab30] cursor-pointer"
             >
-              {copiedAccount === 'Iqbal' ? 'Copied!' : 'Salin No'}
+              {copiedAccount === 'DANA' ? 'Copied!' : 'Salin No'}
             </button>
           </div>
         </div>
@@ -218,7 +289,7 @@ export default function AmplopUcapanSection({ guestName }) {
           </form>
         </div>
 
-        {/* CAROUSEL KOMENTAR DUMMY AJAKAN BERKOMENTAR */}
+        {/* CAROUSEL KOMENTAR (10 KOMENTAR ACAK) */}
         <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-4 rounded-2xl shadow-xl relative z-10 space-y-3">
           <div className="flex items-center justify-between border-b border-[#f0c243]/20 pb-2">
             <h4 className="text-xs font-bold text-[#ffd875] font-serif uppercase tracking-wider">
@@ -289,12 +360,25 @@ export default function AmplopUcapanSection({ guestName }) {
           </div>
         </div>
 
-        {/* PENUTUP SINGKAT */}
-        <div className="relative z-10 text-center mt-8 space-y-1 font-sans">
-          <p className="text-xs text-gray-300">
-            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
+        {/* PENUTUP: FOTO + THANK YOU FOR YOUR ATTENDANCE */}
+        <div className="relative z-10 text-center mt-12 space-y-4 font-sans pb-8">
+          <div className="w-32 h-44 mx-auto rounded-2xl overflow-hidden border-2 border-[#f0c243]/50 shadow-xl">
+            <img
+              src={photoThankYou}
+              alt="Windi & Iqbal"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <h3 className="text-sm font-bold tracking-widest text-[#ffd875] font-serif uppercase pt-2">
+            THANK YOU FOR YOUR ATTENDANCE
+          </h3>
+
+          <p className="text-xs text-gray-300 leading-relaxed max-w-xs mx-auto">
+            Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir di hari bahagia kami.
           </p>
-          <p className="text-base font-serif font-bold text-[#ffd875] pt-2">
+
+          <p className="text-lg font-serif font-bold text-[#ffd875] pt-2">
             Windi &amp; Iqbal
           </p>
         </div>
