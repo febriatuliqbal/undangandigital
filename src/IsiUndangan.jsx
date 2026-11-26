@@ -250,9 +250,9 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
               <CountdownSection />
               <ProfilSection />
               <AcaraLokasiSection />
-              <LoveJourneySection />
-              <AmplopUcapanSection guestName={guestName} />
+              <LoveJourneySection />              
               <GaleriSection />
+              <AmplopUcapanSection guestName={guestName} />
             </div>
           </div>
 
