@@ -6,7 +6,7 @@ export default function LoveJourneySection() {
 
   const journeySteps = [
     {
-      year: '2021',
+      year: '2019',
       title: 'Awal Pertemuan',
       icon: '🌱',
       description: 'Pertama kali saling mengenal dan berbagi cerita. Berawal dari sapaan singkat yang menumbuhkan rasa nyaman.',
@@ -16,15 +16,9 @@ export default function LoveJourneySection() {
       title: 'Memulai Komitmen',
       icon: '💬',
       description: 'Sepakat untuk melangkah lebih jauh bersama, saling mendukung di masa perkuliahan hingga meraih gelar bersama.',
-    },
+    },    
     {
-      year: '2026',
-      title: 'Momen Lamaran',
-      icon: '💍',
-      description: 'Dengan restu kedua orang tua, kami mantap mengikat janji suci untuk melangkah ke jenjang pernikahan.',
-    },
-    {
-      year: '19 Des 2026',
+      year: '18 & 19 Des 2026',
       title: 'Hari Bahagia',
       icon: '👩‍❤️‍👨',
       description: 'Hari di mana kami mengucap janji suci dalam ikatan pernikahan yang dipenuhi keberkahan.',

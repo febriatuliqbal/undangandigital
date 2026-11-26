@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import fotoWanita from './assets/fotowanita.jpg';
 import fotoPria from './assets/fotopria.jpg';
 
+const IG_WANITA = 'https://www.instagram.com/msf_windi?jplx=a2Zpa2thaHphczdz';
+const IG_PRIA = 'https://www.instagram.com/fbr_iqbal?avpt=NmR5bmdmb3VqenUy';
+
 export default function ProfilSection() {
   const containerRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -65,7 +68,7 @@ export default function ProfilSection() {
       {/* Sticky Container mengikuti tinggi layar / kontainer HP */}
       <div className="sticky top-0 h-[100dvh] lg:h-[880px] lg:max-h-[92vh] w-full flex flex-col justify-between overflow-hidden bg-[#7a0c14]">
         {/* FOTO FULL BLEED: paralaks di wrapper, gambar tetap object-cover object-top */}
-        <div className="relative w-full h-[64%] overflow-hidden shrink-0">
+        <div className="relative w-full h-[65%] overflow-hidden shrink-0">
           {/* Wrapper Mempelai Wanita */}
           <div
             style={{
@@ -98,13 +101,13 @@ export default function ProfilSection() {
             />
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#7a0c14] via-[#7a0c14]/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#7a0c14] via-[#7a0c14]/80 to-transparent z-10 pointer-events-none" />
         </div>
 
-        {/* TEKS PROFIL DI BAWAH FOTO */}
-        <div className="relative z-10 flex-1 bg-[#7a0c14] px-5 pb-20 flex flex-col items-center justify-center text-center font-sans">
+        {/* TEKS PROFIL DI BAWAH FOTO (AGAK MEPET KE ATAS AGAR MUAT RAPI) */}
+        <div className="relative z-10 flex-1 -mt-5 bg-[#7a0c14] px-4 pb-14 flex flex-col items-center justify-start pt-1 text-center font-sans">
           {/* TOMBOL INDIKATOR PERPINDAHAN DI ATAS NAMA */}
-          <div className="mb-3 flex flex-col items-center">
+          <div className="mb-2 flex flex-col items-center">
             <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-1 rounded-full shadow-md flex items-center space-x-1">
               <button
                 type="button"
@@ -142,7 +145,7 @@ export default function ProfilSection() {
             </div>
 
             {/* Progress Bar Tipis Penanda Scroll */}
-            <div className="w-32 h-1 bg-[#50060c] rounded-full overflow-hidden mt-2 border border-[#f0c243]/20">
+            <div className="w-32 h-1 bg-[#50060c] rounded-full overflow-hidden mt-1.5 border border-[#f0c243]/20">
               <div
                 className="h-full bg-[#f0c243] transition-all duration-150 ease-out rounded-full"
                 style={{ width: `${Math.round(scrollProgress * 100)}%` }}
@@ -154,17 +157,25 @@ export default function ProfilSection() {
           <div className="relative w-full max-w-xs flex items-center justify-center">
             {/* PROFIL WINDI */}
             <div
-              className={`transition-all duration-500 ease-out space-y-1.5 w-full ${
+              className={`transition-all duration-500 ease-out space-y-1 w-full ${
                 !isPriaActive
                   ? 'opacity-100 translate-y-0 relative'
                   : 'opacity-0 -translate-y-4 absolute pointer-events-none'
               }`}
             >
-              <h3 className="text-lg font-serif font-bold text-[#ffd875] tracking-wide">
+              <h3 className="text-base sm:text-lg font-serif font-bold text-[#ffd875] tracking-wide leading-tight">
                 Ns. Maisafa Windi Ilham, S.Kep
               </h3>
-              <p className="text-xs text-gray-300">Anak ke empat dari:</p>
-              <div className="text-sm font-semibold text-white leading-snug">
+              <a
+                href={IG_WANITA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-[#50060c]/85 hover:bg-[#f0c243] text-[#ffd875] hover:text-[#50060c] border border-[#f0c243]/40 text-[11px] font-medium transition-colors"
+              >
+                <span>@msf_windi</span>
+              </a>
+              <p className="text-[11px] text-gray-300 pt-0.5">Anak ke empat dari:</p>
+              <div className="text-xs sm:text-sm font-semibold text-white leading-snug">
                 <p>Bapak Suparjo</p>
                 <p>Ibu Suwantini</p>
               </div>
@@ -172,7 +183,7 @@ export default function ProfilSection() {
               <button
                 type="button"
                 onClick={() => scrollToProfile('pria')}
-                className="mt-1 inline-flex items-center space-x-1 text-[10px] text-[#ffd875]/80 hover:text-[#ffd875] animate-bounce pt-1 cursor-pointer"
+                className="inline-flex items-center space-x-1 text-[10px] text-[#ffd875]/80 hover:text-[#ffd875] animate-bounce pt-0.5 cursor-pointer"
               >
                 <span>Scroll untuk profil mempelai pria</span>
                 <span>↓</span>
@@ -181,17 +192,25 @@ export default function ProfilSection() {
 
             {/* PROFIL IQBAL */}
             <div
-              className={`transition-all duration-500 ease-out space-y-1.5 w-full ${
+              className={`transition-all duration-500 ease-out space-y-1 w-full ${
                 isPriaActive
                   ? 'opacity-100 translate-y-0 relative'
                   : 'opacity-0 translate-y-4 absolute pointer-events-none'
               }`}
             >
-              <h3 className="text-xl font-serif font-bold text-[#ffd875] tracking-wide">
+              <h3 className="text-lg sm:text-xl font-serif font-bold text-[#ffd875] tracking-wide leading-tight">
                 Febriatul Iqbal, S.Kom
               </h3>
-              <p className="text-xs text-gray-300">Anak pertama dari:</p>
-              <div className="text-sm font-semibold text-white leading-snug">
+              <a
+                href={IG_PRIA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-[#50060c]/85 hover:bg-[#f0c243] text-[#ffd875] hover:text-[#50060c] border border-[#f0c243]/40 text-[11px] font-medium transition-colors"
+              >
+                <span>@fbr_iqbal</span>
+              </a>
+              <p className="text-[11px] text-gray-300 pt-0.5">Anak pertama dari:</p>
+              <div className="text-xs sm:text-sm font-semibold text-white leading-snug">
                 <p>Bapak Guspendri (Alm)</p>
                 <p>Ibu Pispa Meri Yenti</p>
               </div>

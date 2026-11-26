@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import fotoPrewed from '../assets/galeri3.jpg';
 import fotoWanita from '../assets/galeri2.jpg';
 import fotoPria from '../assets/galeri1.jpg';
+import foto5 from '../assets/galeri5.jpg';
 import ornamenJawa from '../assets/MOTIF ORNAMEN JAWA.png';
 
 const GALLERY_PHOTOS = [
@@ -37,7 +38,7 @@ const GALLERY_PHOTOS = [
   },
   {
     id: 4,
-    src: fotoPrewed,
+    src: foto5,
     caption: 'Momen Bahagia',
     span: 'col-span-2 aspect-[16/9]',
     parallaxSpeed: 14,
