@@ -5,10 +5,10 @@ import CountdownSection from './components/CountdownSection';
 import AcaraLokasiSection from './components/AcaraLokasiSection';
 import AmplopUcapanSection from './components/AmplopUcapanSection';
 import GaleriSection from './components/GaleriSection';
+import LoveJourneySection from './components/LoveJourneySection';
 
 import motifBawah from './assets/MOTIF MINANG BAWAH.png';
 import ornamenJawa from './assets/MOTIF ORNAMEN JAWA.png';
-import LoveJourneySection from './components/LoveJourneySection';
 
 export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
@@ -16,6 +16,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
 
   const scrollContainerRef = useRef(null);
 
+  // AUTO SCROLLING EFFECT
   useEffect(() => {
     let scrollInterval;
     if (isAutoScrolling) {
@@ -33,7 +34,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
     return () => clearInterval(scrollInterval);
   }, [isAutoScrolling]);
 
-  // Deteksi posisi scroll apakah sudah sampai bawah
+  // DETEKSI POSISI SCROLL (BOTTOM CHECK)
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -54,6 +55,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
     };
   }, []);
 
+  // PERBAIKAN ANIMASI SCROLL IN / OUT
   useEffect(() => {
     const getHiddenClasses = (el) => {
       const animType = el.getAttribute('data-anim') || 'bottom';
@@ -74,7 +76,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
     };
 
     const hideElement = (el) => {
-      el.classList.remove(...getHiddenClasses(el));
+      el.classList.remove(...getVisibleClasses());
       el.classList.add(...getHiddenClasses(el));
     };
 
@@ -85,13 +87,8 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
       (entries) => {
         entries.forEach((entry) => {
           const target = entry.target;
-          const rootTop = entry.rootBounds ? entry.rootBounds.top : 0;
-          const rootHeight = entry.rootBounds ? entry.rootBounds.height : window.innerHeight;
-          const midThreshold = rootTop + rootHeight * 0.45;
 
           if (entry.isIntersecting) {
-            showElement(target);
-          } else if (entry.boundingClientRect.top < midThreshold) {
             showElement(target);
           } else {
             hideElement(target);
@@ -100,8 +97,8 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
       },
       {
         root: scrollContainerRef.current,
-        threshold: 0.2,
-        rootMargin: '-25% 0px -25% 0px',
+        threshold: 0.15,
+        rootMargin: '-5% 0px -5% 0px',
       }
     );
 
@@ -155,22 +152,11 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
         .animate-ornamen-sway { animation: swayOrnament 4.2s ease-in-out infinite; }
         .animate-ornamen-sway-reverse { animation: swayOrnament 4.2s ease-in-out 2.1s infinite reverse; }
 
-        @keyframes slideInSideLeft {
-          0% { transform: translateX(-70px) translateY(-20px) rotate(0deg); opacity: 0; }
-          100% { transform: translateX(0px) translateY(0px) rotate(25deg); opacity: 0.4; }
-        }
-        @keyframes slideInSideRight {
-          0% { transform: translateX(70px) translateY(-20px) rotate(0deg); opacity: 0; }
-          100% { transform: translateX(0px) translateY(0px) rotate(-25deg); opacity: 0.4; }
-        }
-        .animate-ornamen-top-left { animation: slideInSideLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-ornamen-top-right { animation: slideInSideRight 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
         @keyframes nudgeDown {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(5px); }
         }
-        .animate-[#f0c243] { animation: nudgeDown 1.2s ease-in-out infinite; }
+        .animate-nudge-down { animation: nudgeDown 1.2s ease-in-out infinite; }
 
         @keyframes nudgeUp {
           0%, 100% { transform: translateY(0px); }
@@ -224,12 +210,12 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
 
           {/* KONTEN UTAMA */}
           <div className="relative flex-1 bg-[#3a0509]">
-            {/* 1. HERO CAROUSEL (STICKY ATAS) */}
+            {/* HERO CAROUSEL */}
             <div className="sticky top-0 z-10 w-full bg-[#60050c]">
               <HeroCarousel />
             </div>
 
-            {/* 2. LAYER KONTEN (MELUNCUR NAIK MENUTUPI HERO) */}
+            {/* LAYER KONTEN UTAMA */}
             <div className="relative z-20 pt-8 pb-24 space-y-12 bg-gradient-to-b from-[#6d070e] via-[#850e18] to-[#6d0912]">
               <img
                 src={ornamenJawa}
@@ -259,7 +245,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
             </div>
           </div>
 
-          {/* TOMBOL PANAH KANAN BAWAH */}
+          {/* TOMBOL NAVIGASI BOTTOM (PANAH UP/DOWN) */}
           <div className="sticky bottom-14 z-40 w-full h-0 pointer-events-none">
             <div className="flex justify-end pr-4 -translate-y-12">
               <button
@@ -277,7 +263,7 @@ export default function IsiUndangan({ guestName, isPlaying, toggleAudio }) {
             </div>
           </div>
 
-          {/* MOTIF MINANG STICKY BAWAH */}
+          {/* MOTIF MINANG BAWAH */}
           <div className="sticky bottom-0 z-30 w-full leading-none overflow-hidden shrink-0 pointer-events-none -mt-12">
             <img
               src={motifBawah}
