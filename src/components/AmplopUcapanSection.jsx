@@ -1,12 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import ornamenJawa from '../assets/MOTIF ORNAMEN JAWA.png';
 
+const INITIAL_COMMENTS = [
+  {
+    id: 1,
+    name: 'Budi & Keluarga',
+    text: 'Selamat untuk Windi & Iqbal! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin 🤲',
+    time: 'Baru saja',
+  },
+  {
+    id: 2,
+    name: 'Rina & Teman-teman',
+    text: 'Happy Wedding Windi & Iqbal! Lancar sampai hari H dan bahagia selalu ya kalian 💕',
+    time: '1 jam yang lalu',
+  },
+];
+
 export default function AmplopUcapanSection({ guestName }) {
   const [copiedAccount, setCopiedAccount] = useState('');
   const [senderName, setSenderName] = useState(
     guestName !== 'Tamu Undangan' ? guestName : ''
   );
   const [ucapanText, setUcapanText] = useState('');
+  const [comments, setComments] = useState([]);
+
+  // Load komentar dari localStorage saat pertama kali dimuat
+  useEffect(() => {
+    const savedComments = localStorage.getItem('undangan_comments');
+    if (savedComments) {
+      try {
+        setComments(JSON.parse(savedComments));
+      } catch (err) {
+        setComments(INITIAL_COMMENTS);
+      }
+    } else {
+      setComments(INITIAL_COMMENTS);
+    }
+  }, []);
 
   useEffect(() => {
     if (guestName && guestName !== 'Tamu Undangan') {
@@ -24,10 +54,25 @@ export default function AmplopUcapanSection({ guestName }) {
     e.preventDefault();
     if (!ucapanText.trim()) return;
 
+    const newName = senderName.trim() || 'Tamu Undangan';
+    const newComment = {
+      id: Date.now(),
+      name: newName,
+      text: ucapanText.trim(),
+      time: 'Baru saja',
+    };
+
+    // Tambahkan komentar baru ke daftar & simpan ke localStorage
+    const updatedComments = [newComment, ...comments];
+    setComments(updatedComments);
+    localStorage.setItem('undangan_comments', JSON.stringify(updatedComments));
+
+    // Kirim pesan ke WhatsApp
     const targetPhone = '6282385244193';
-    const message = `Halo Windi & Iqbal,\nSaya *${senderName || 'Tamu Undangan'}* ingin mengucapkan:\n\n"${ucapanText}"`;
+    const message = `Halo Windi & Iqbal,\nSaya *${newName}* ingin mengucapkan:\n\n"${ucapanText.trim()}"`;
     const waUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
 
+    setUcapanText('');
     window.open(waUrl, '_blank');
   };
 
@@ -76,13 +121,14 @@ export default function AmplopUcapanSection({ guestName }) {
       </section>
 
       {/* UCAPAN & DOA */}
-      <section className="relative px-6 scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out font-sans">
+      <section className="relative px-6 scroll-animate opacity-0 translate-y-6 transition-all duration-700 ease-out font-sans space-y-4">
         <img
           src={ornamenJawa}
           alt="Ornamen Ucapan Left"
           className="absolute -bottom-6 -left-12 w-44 h-auto opacity-25 brightness-50 -rotate-45 animate-float pointer-events-none z-0"
         />
 
+        {/* FORM KIRM UCAPAN */}
         <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-6 rounded-2xl space-y-4 shadow-xl relative z-10">
           <h3 className="text-lg font-bold text-[#ffd875] font-serif text-center">
             Kirim Ucapan &amp; Doa
@@ -120,6 +166,35 @@ export default function AmplopUcapanSection({ guestName }) {
               <span>💬 Kirim Ucapan via WhatsApp</span>
             </button>
           </form>
+        </div>
+
+        {/* DAFTAR UCAPAN & DOA (KOMENTAR TAMU) */}
+        <div className="bg-[#50060c]/90 border border-[#f0c243]/40 p-4 rounded-2xl shadow-xl relative z-10 space-y-3">
+          <div className="flex items-center justify-between border-b border-[#f0c243]/20 pb-2">
+            <h4 className="text-xs font-bold text-[#ffd875] font-serif uppercase tracking-wider">
+              Ucapan Tamu ({comments.length})
+            </h4>
+            <span className="text-[10px] text-gray-400">Terbaru</span>
+          </div>
+
+          <div className="max-h-60 overflow-y-auto pr-1 space-y-2.5 scrollbar-thin">
+            {comments.map((item) => (
+              <div
+                key={item.id}
+                className="bg-[#3a0509]/70 border border-[#f0c243]/20 p-3 rounded-xl space-y-1 text-left"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#ffd875] truncate max-w-[170px]">
+                    {item.name}
+                  </span>
+                  <span className="text-[9px] text-gray-400">{item.time}</span>
+                </div>
+                <p className="text-[11px] text-gray-200 leading-relaxed font-sans">
+                  {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </>
