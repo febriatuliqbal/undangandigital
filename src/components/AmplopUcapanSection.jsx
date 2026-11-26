@@ -254,9 +254,8 @@ export default function AmplopUcapanSection({ guestName }) {
               style={{
                 transform: `translate3d(calc(-${activeSlide * 100}% + ${dragOffset}px), 0, 0)`,
               }}
-              className={`flex ${
-                isDragging ? 'transition-none' : 'transition-transform duration-400 ease-out'
-              }`}
+              className={`flex ${isDragging ? 'transition-none' : 'transition-transform duration-400 ease-out'
+                }`}
             >
               {comments.map((item) => (
                 <div key={item.id} className="w-full shrink-0 px-0.5">
@@ -283,12 +282,21 @@ export default function AmplopUcapanSection({ guestName }) {
                 type="button"
                 onClick={() => setActiveSlide(idx)}
                 aria-label={`Slide komentar ${idx + 1}`}
-                className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                  activeSlide === idx ? 'w-5 bg-[#f0c243]' : 'w-1.5 bg-white/35'
-                }`}
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${activeSlide === idx ? 'w-5 bg-[#f0c243]' : 'w-1.5 bg-white/35'
+                  }`}
               />
             ))}
           </div>
+        </div>
+
+        {/* PENUTUP SINGKAT */}
+        <div className="relative z-10 text-center mt-8 space-y-1 font-sans">
+          <p className="text-xs text-gray-300">
+            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
+          </p>
+          <p className="text-base font-serif font-bold text-[#ffd875] pt-2">
+            Windi &amp; Iqbal
+          </p>
         </div>
       </section>
     </>

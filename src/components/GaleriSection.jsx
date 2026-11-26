@@ -247,17 +247,7 @@ export default function GaleriSection() {
             </div>
           </button>
         ))}
-      </div>
-
-      {/* PENUTUP SINGKAT */}
-      <div className="relative z-10 text-center mt-8 space-y-1 font-sans">
-        <p className="text-xs text-gray-300">
-          Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
-        </p>
-        <p className="text-base font-serif font-bold text-[#ffd875] pt-2">
-          Windi &amp; Iqbal
-        </p>
-      </div>
+      </div>     
 
       {/* LIGHTBOX PREVIEW SAAT FOTO DIKLIK */}
       {selectedPhoto && (
