@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CoverUndangan from './CoverUndangan';
 import IsiUndangan from './IsiUndangan';
+import GenerateKirimWA from './GenerateKirimWA';
 import laguBackground from './assets/lagu.mp3';
 
 export default function App() {
+  // Deteksi Halaman Generator via URL Path atau Query Parameter
+  const isGeneratePage =
+    window.location.pathname === '/generate-kirimwa' ||
+    window.location.search.includes('page=generate');
+
   const [isOpen, setIsOpen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [guestName, setGuestName] = useState('Tamu Undangan');
@@ -11,7 +17,16 @@ export default function App() {
   const audioRef = useRef(null);
   const wasPlayingBeforeHideRef = useRef(false);
 
-  // Jeda musik saat keluar tab/aplikasi, dan lanjutkan lagi saat tab dibuka kembali
+  // Ambil nama tamu dari URL query parameter (?to=Nama%20Tamu)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const toParam = params.get('to');
+    if (toParam) {
+      setGuestName(toParam);
+    }
+  }, []);
+
+  // Jeda musik saat keluar tab/aplikasi
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (!audioRef.current) return;
@@ -58,7 +73,7 @@ export default function App() {
     };
   }, [isOpen]);
 
-  // Dengarkan tombol Back (Kembali) di HP / Browser
+  // Dengarkan tombol Back di HP / Browser
   useEffect(() => {
     const handlePopState = () => {
       if (isOpen) {
@@ -66,14 +81,12 @@ export default function App() {
         setIsTransitioning(false);
         wasPlayingBeforeHideRef.current = false;
 
-        // Hentikan dan reset musik saat kembali ke Cover
         if (audioRef.current) {
           audioRef.current.pause();
           audioRef.current.currentTime = 0;
           setIsPlaying(false);
         }
 
-        // Keluar dari fullscreen jika sedang aktif
         if (document.fullscreenElement) {
           document.exitFullscreen().catch(() => {});
         }
@@ -102,9 +115,7 @@ export default function App() {
   const handleOpen = (name) => {
     if (name) setGuestName(name);
 
-    // Tambahkan entry ke riwayat browser agar tombol Back kembali ke Cover
     window.history.pushState({ undanganOpen: true }, '', window.location.href);
-
     setIsTransitioning(true);
 
     if (audioRef.current) {
@@ -120,6 +131,12 @@ export default function App() {
     }, 750);
   };
 
+  // 1. Jika URL menuju halaman generator, tampilkan Generator Halaman Tersembunyi
+  if (isGeneratePage) {
+    return <GenerateKirimWA />;
+  }
+
+  // 2. Jika bukan, tampilkan Undangan biasa (Cover / Isi)
   return (
     <>
       <style>{`
